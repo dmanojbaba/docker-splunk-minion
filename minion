@@ -11,11 +11,13 @@ help() {
     echo "usage: minion [option]"
     echo "  minion help"
     echo "  minion run [TAG]"
-    echo "  minion splunk [command]"
     echo "  minion start | stop | restart"
+    echo "  minion status"
+    echo "  minion splunk [command]"
     echo "  minion shell | bash"
     echo "  minion exec [command]"
     echo "  minion remove | rm"
+    echo "  minion rmi [TAG]"
 }
 
 run() {
@@ -81,7 +83,14 @@ remove() {
     docker rm -fv ${CONTAINER_NAME}
 }
 
-if [[ $1 =~ ^(run|setup|splunk|status|start|stop|restart|exec|logs|help)$ ]]; then
+rmi() {
+    if [[ $1 != "" ]]; then
+        DOCKER_IMAGE_TAG=$1
+    fi
+    docker rmi ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+}
+
+if [[ $1 =~ ^(run|setup|splunk|status|start|stop|restart|exec|logs|rmi|help)$ ]]; then
     "$@"
 elif [[ $1 =~ ^(shell|bash|sh)$ ]]; then
     shell
